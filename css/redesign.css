@@ -1,0 +1,97 @@
+/* ============================================================
+   Redesign layer: palette, type, layout, phone navigation.
+   Loaded after styles.css. Component rules in styles.css inherit
+   these tokens through the CSS variables below.
+   ============================================================ */
+:root{
+  --bg:#0D1013; --bg2:#12161A; --bg3:#151A1F;
+  --border:#232A31; --border2:#2E3740;
+  --gold:#E0B23E; --gold2:#EBC565; --gold-dim:#6B5619;
+  --bull:#3DD6A0; --bull-dim:#17503F; --bear:#FF7A7A; --bear-dim:#5A2A2A;
+  --text:#B4BCC4; --text-dim:#8A949E; --text-bright:#E8EAEC;
+  --panel:#12161A;
+  --glow-gold:none; --glow-bull:none; --glow-bear:none;
+}
+body{font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.45}
+body::before,body::after{display:none}
+
+/* Header */
+header{position:sticky;top:0;z-index:20;padding:12px 24px;background:var(--bg);border-bottom:1px solid var(--border);flex-wrap:nowrap}
+.logo-icon{width:34px;height:34px;border-radius:8px;background:var(--gold);color:#0D1013;box-shadow:none;font:500 13px 'IBM Plex Mono',monospace}
+.logo-text{font:600 15px Inter,sans-serif;letter-spacing:0;text-transform:none;color:var(--text-bright)}
+.logo-sub{font-size:11px;letter-spacing:.06em;color:var(--text-dim)}
+.header-right{display:flex;flex-direction:row-reverse;align-items:center;gap:20px}
+.live-price{font:500 28px 'IBM Plex Mono',monospace;letter-spacing:0;color:var(--text-bright);text-shadow:none}
+.price-change{font:500 13px 'IBM Plex Mono',monospace}
+.api-status{font-size:12px;letter-spacing:.04em;color:var(--text-dim)}
+
+/* Layout (desktop) */
+.main-layout{max-width:1440px;margin:0 auto;padding:16px 24px 24px;gap:16px;
+  grid-template-columns:minmax(0,1fr) 380px;grid-template-rows:auto 1fr;min-height:0}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px}
+.tf-bar{grid-column:1/-1;grid-row:1;padding:10px 12px;gap:12px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.chart-area{grid-column:1;grid-row:2}
+.sidebar{grid-column:2;grid-row:2;border-left:1px solid var(--border);max-height:none;overflow:visible}
+
+/* Controls */
+.tf-group,.tf-actions{display:flex;gap:6px;flex-wrap:wrap}
+.tf-meta{margin-left:auto;display:flex;flex-direction:column;line-height:1.3}
+.tf-meta span{font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.04em}
+.meta-gold{color:rgba(224,178,62,.8)} .meta-green{color:rgba(61,214,160,.8)}
+.tf-btn,.refresh-btn{min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--border);
+  background:var(--bg3);color:var(--text);font:500 13px Inter,sans-serif;letter-spacing:0}
+.tf-btn:hover{border-color:var(--gold-dim);color:var(--gold)}
+.tf-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(224,178,62,.1);box-shadow:none}
+#fiboBtn{background:rgba(224,178,62,.08);border-color:rgba(224,178,62,.3);color:rgba(224,178,62,.8)}
+#kzBtn{background:rgba(74,158,255,.08);border-color:rgba(74,158,255,.3);color:rgba(110,175,255,.9)}
+
+/* Chart */
+.structure-badges{padding:10px 14px}
+.badge{padding:4px 10px;border-radius:999px;font:600 12px Inter,sans-serif;letter-spacing:.02em;text-transform:none}
+.chart-canvas-wrap{flex:none;height:clamp(340px,58vh,600px);min-height:0}
+.chart-tools{position:absolute;bottom:8px;right:8px;display:flex;gap:6px;z-index:10}
+.chart-tools button{min-width:40px;height:36px;border-radius:8px;border:1px solid var(--border2);
+  background:rgba(13,16,19,.88);color:var(--gold);font:500 14px 'IBM Plex Mono',monospace;cursor:pointer}
+.chart-tools .live{color:var(--bull);font-size:11px;min-width:48px}
+.bottom-panel,.summary-panel{padding:14px 16px;border-top:1px solid var(--border)}
+.summary-actions{display:flex;gap:8px;flex-wrap:wrap}
+.weekly-btn{min-height:44px;border-radius:10px;font:500 13px Inter,sans-serif;letter-spacing:0}
+.weekly-btn.danger{background:rgba(255,122,122,.1);border-color:rgba(255,122,122,.4);color:var(--bear)}
+
+/* Side column */
+.condition-panel{padding:16px}
+.condition-title{font:600 11px Inter,sans-serif;letter-spacing:.08em;color:var(--text-dim)}
+.condition-main{font:600 26px Inter,sans-serif;letter-spacing:0}
+.tabs{padding:0 8px}
+.tab{min-height:44px;display:flex;align-items:center;padding:0 14px;font:600 12px Inter,sans-serif;letter-spacing:.06em}
+
+/* Modal */
+.modal{border-radius:14px}
+
+/* Phone navigation: hidden on desktop */
+.bottom-nav{display:none}
+
+@media (max-width:900px){
+  body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  header{padding:10px 14px}
+  .logo-sub{display:none}
+  .live-price{font-size:24px}
+  .main-layout{display:flex;flex-direction:column;padding:12px;gap:12px}
+  .sidebar{order:-1;border-left:0;border-top:0}
+  .tf-bar{flex-direction:column;align-items:stretch}
+  .tf-group{display:grid;grid-template-columns:repeat(4,1fr)}
+  .tf-actions{display:grid;grid-template-columns:repeat(3,1fr)}
+  .tf-meta{margin-left:0;flex-direction:row;gap:12px;flex-wrap:wrap}
+  .chart-canvas-wrap{height:clamp(280px,46vh,420px)}
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);
+    border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom)}
+  .bottom-nav button{flex:1;min-height:56px;background:none;border:0;color:var(--text-dim);font:500 12px Inter,sans-serif}
+  .bottom-nav button.on{color:var(--gold);box-shadow:inset 0 2px 0 var(--gold)}
+  /* One section at a time */
+  body[data-view="chart"] .tabs,body[data-view="chart"] .tab-content{display:none}
+  body:not([data-view="chart"]) .chart-area,body:not([data-view="chart"]) .tf-bar,
+  body:not([data-view="chart"]) .condition-panel,body:not([data-view="chart"]) .tabs{display:none}
+}
+@media (max-width:600px){
+  .modal{width:calc(100vw - 16px);max-height:90vh;overflow:auto}
+}
