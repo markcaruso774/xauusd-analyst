@@ -1,15 +1,15 @@
 :root {
-  --bg: #080c10;
+  --bg: #0D1013;
   --bg2: #0d1117;
   --bg3: #111820;
   --border: #1e2d3d;
   --border2: #243447;
-  --gold: #f0b429;
+  --gold: #E0B23E;
   --gold2: #ffd166;
   --gold-dim: #7a5c1a;
-  --bull: #00e5a0;
+  --bull: #3DD6A0;
   --bull-dim: #004d38;
-  --bear: #ff4d6d;
+  --bear: #FF7A7A;
   --bear-dim: #4d0018;
   --neutral: #4a9eff;
   --neutral-dim: #0d2d50;
@@ -18,9 +18,9 @@
   --text-bright: #e6edf3;
   --warn: #ffaa00;
   --panel: rgba(13,17,23,0.97);
-  --glow-gold: 0 0 20px rgba(240,180,41,0.3);
-  --glow-bull: 0 0 20px rgba(0,229,160,0.3);
-  --glow-bear: 0 0 20px rgba(255,77,109,0.3);
+  --glow-gold: 0 0 20px rgba(224,178,62,0.3);
+  --glow-bull: 0 0 20px rgba(61,214,160,0.3);
+  --glow-bear: 0 0 20px rgba(255,122,122,0.3);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -28,7 +28,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -39,8 +39,8 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(240,180,41,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(240,180,41,0.03) 1px, transparent 1px);
+    linear-gradient(rgba(224,178,62,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(224,178,62,0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
   z-index: 0;
@@ -52,7 +52,7 @@ body::after {
   position: fixed;
   left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(240,180,41,0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(224,178,62,0.4), transparent);
   animation: scan 8s linear infinite;
   pointer-events: none;
   z-index: 1;
@@ -84,7 +84,7 @@ header {
   background: linear-gradient(135deg, var(--gold), var(--gold2));
   border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:18px;
   color: #000;
   font-weight: bold;
@@ -92,7 +92,7 @@ header {
 }
 
 .logo-text {
-  font-family: 'Exo 2', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 800;
   font-size:22px;
   letter-spacing: 2px;
@@ -101,7 +101,7 @@ header {
 }
 
 .logo-sub {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   color: var(--text-dim);
   letter-spacing: 1px;
@@ -119,7 +119,7 @@ header {
 }
 
 .live-price {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:34px;
   color: var(--gold);
   text-shadow: var(--glow-gold);
@@ -127,7 +127,7 @@ header {
 }
 
 .price-change {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:15px;
 }
 
@@ -152,7 +152,7 @@ header {
 }
 
 .api-status {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   color: var(--text-dim);
 }
@@ -193,7 +193,7 @@ header {
 }
 
 .panel-title {
-  font-family: 'Exo 2', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size:15px;
   font-weight: 600;
   letter-spacing: 2px;
@@ -218,7 +218,7 @@ header {
 }
 
 .tf-label {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   color: var(--text-dim);
   margin-right: 8px;
@@ -230,7 +230,7 @@ header {
   border: 1px solid var(--border2);
   background: transparent;
   color: var(--text-dim);
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:15px;
   letter-spacing: 1px;
   cursor: pointer;
@@ -241,7 +241,7 @@ header {
 .tf-btn.active {
   border-color: var(--gold);
   color: var(--gold);
-  background: rgba(240,180,41,0.1);
+  background: rgba(224,178,62,0.1);
   box-shadow: var(--glow-gold);
 }
 
@@ -251,7 +251,7 @@ header {
   border: 1px solid var(--border2);
   background: transparent;
   color: var(--text-dim);
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   cursor: pointer;
   border-radius: 3px;
@@ -296,17 +296,17 @@ canvas#mainChart {
 .badge {
   padding: 4px 12px;
   border-radius: 3px;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   letter-spacing: 1px;
   text-transform: uppercase;
   border: 1px solid;
 }
 
-.badge.bull { color: var(--bull); border-color: var(--bull-dim); background: rgba(0,229,160,0.08); }
-.badge.bear { color: var(--bear); border-color: var(--bear-dim); background: rgba(255,77,109,0.08); }
+.badge.bull { color: var(--bull); border-color: var(--bull-dim); background: rgba(61,214,160,0.08); }
+.badge.bear { color: var(--bear); border-color: var(--bear-dim); background: rgba(255,122,122,0.08); }
 .badge.neutral { color: var(--neutral); border-color: var(--neutral-dim); background: rgba(74,158,255,0.08); }
-.badge.gold { color: var(--gold); border-color: var(--gold-dim); background: rgba(240,180,41,0.08); }
+.badge.gold { color: var(--gold); border-color: var(--gold-dim); background: rgba(224,178,62,0.08); }
 .badge.warn { color: var(--warn); border-color: rgba(255,170,0,0.3); background: rgba(255,170,0,0.08); }
 
 /* ===== SIDEBAR ===== */
@@ -336,7 +336,7 @@ canvas#mainChart {
 }
 
 .condition-title {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:13px;
   color: var(--text-dim);
   letter-spacing: 2px;
@@ -344,7 +344,7 @@ canvas#mainChart {
 }
 
 .condition-main {
-  font-family: 'Exo 2', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size:20px;
   font-weight: 700;
   margin-bottom: 6px;
@@ -376,7 +376,7 @@ canvas#mainChart {
 .level-row:last-child { border-bottom: none; }
 
 .level-label {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:13px;
   color: var(--text-dim);
   letter-spacing: 1px;
@@ -388,18 +388,18 @@ canvas#mainChart {
   padding: 2px 6px;
   border-radius: 2px;
   margin: 0 8px;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   letter-spacing: 0.5px;
 }
 .level-type.ob-bull { background: var(--bull-dim); color: var(--bull); }
 .level-type.ob-bear { background: var(--bear-dim); color: var(--bear); }
 .level-type.liq { background: var(--neutral-dim); color: var(--neutral); }
-.level-type.fvg { background: rgba(240,180,41,0.15); color: var(--gold); }
-.level-type.support { background: rgba(0,229,160,0.12); color: var(--bull); }
-.level-type.resist { background: rgba(255,77,109,0.12); color: var(--bear); }
+.level-type.fvg { background: rgba(224,178,62,0.15); color: var(--gold); }
+.level-type.support { background: rgba(61,214,160,0.12); color: var(--bull); }
+.level-type.resist { background: rgba(255,122,122,0.12); color: var(--bear); }
 
 .level-price {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:16px;
   color: var(--text-bright);
   text-align: right;
@@ -425,11 +425,11 @@ canvas#mainChart {
 
 .alert-item.buy {
   border-color: var(--bull);
-  background: rgba(0,229,160,0.05);
+  background: rgba(61,214,160,0.05);
 }
 .alert-item.sell {
   border-color: var(--bear);
-  background: rgba(255,77,109,0.05);
+  background: rgba(255,122,122,0.05);
 }
 .alert-item.watch {
   border-color: var(--warn);
@@ -448,7 +448,7 @@ canvas#mainChart {
 }
 
 .alert-type {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   letter-spacing: 1px;
   font-weight: bold;
@@ -459,7 +459,7 @@ canvas#mainChart {
 .alert-item.info .alert-type { color: var(--neutral); }
 
 .alert-time {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:13px;
   color: var(--text-dim);
 }
@@ -478,7 +478,7 @@ canvas#mainChart {
 }
 
 .alert-level-item {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:13px;
 }
 
@@ -523,7 +523,7 @@ canvas#mainChart {
 .tf-analysis-card:hover { border-color: var(--border2); }
 
 .tf-analysis-card .tf-name {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   color: var(--text-dim);
   letter-spacing: 1px;
@@ -531,7 +531,7 @@ canvas#mainChart {
 }
 
 .tf-analysis-card .tf-structure {
-  font-family: 'Exo 2', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size:17px;
   font-weight: 700;
   margin-bottom: 4px;
@@ -581,7 +581,7 @@ canvas#mainChart {
 }
 
 .stat-label {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:13px;
   color: var(--text-dim);
   letter-spacing: 1px;
@@ -589,7 +589,7 @@ canvas#mainChart {
 }
 
 .stat-value {
-  font-family: 'Exo 2', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size:20px;
   font-weight: 700;
   color: var(--gold);
@@ -600,10 +600,10 @@ canvas#mainChart {
   display: block;
   width: 100%;
   padding: 10px;
-  background: linear-gradient(135deg, rgba(240,180,41,0.1), rgba(240,180,41,0.05));
+  background: linear-gradient(135deg, rgba(224,178,62,0.1), rgba(224,178,62,0.05));
   border: 1px solid var(--gold-dim);
   color: var(--gold);
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:15px;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -614,7 +614,7 @@ canvas#mainChart {
   text-align: center;
 }
 .weekly-btn:hover {
-  background: rgba(240,180,41,0.15);
+  background: rgba(224,178,62,0.15);
   box-shadow: var(--glow-gold);
 }
 
@@ -657,7 +657,7 @@ canvas#mainChart {
 }
 
 .modal-title {
-  font-family: 'Exo 2', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size:22px;
   font-weight: 800;
   color: var(--gold);
@@ -685,7 +685,7 @@ canvas#mainChart {
 }
 
 .modal-section-title {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   letter-spacing: 2px;
   color: var(--text-dim);
@@ -708,13 +708,13 @@ canvas#mainChart {
   align-items: center;
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
 }
 
 .trade-row:last-child { border-bottom: none; }
 .trade-day { color: var(--text-dim); }
-.trade-desc { color: var(--text); font-size:15px; font-family: 'Rajdhani', sans-serif; }
+.trade-desc { color: var(--text); font-size:15px; font-family: 'Inter', sans-serif; }
 .trade-side-buy { color: var(--bull); font-weight: bold; }
 .trade-side-sell { color: var(--bear); font-weight: bold; }
 .trade-entry { color: var(--gold); }
@@ -739,7 +739,7 @@ canvas#mainChart {
   background: var(--bg3);
   border: 1px solid var(--border2);
   color: var(--text-bright);
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:16px;
   padding: 8px 12px;
   border-radius: 4px;
@@ -749,16 +749,16 @@ canvas#mainChart {
 
 .api-submit-btn {
   padding: 8px 16px;
-  background: rgba(240,180,41,0.15);
+  background: rgba(224,178,62,0.15);
   border: 1px solid var(--gold-dim);
   color: var(--gold);
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:15px;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s;
 }
-.api-submit-btn:hover { background: rgba(240,180,41,0.25); }
+.api-submit-btn:hover { background: rgba(224,178,62,0.25); }
 
 .api-hint {
   font-size:15px;
@@ -778,7 +778,7 @@ canvas#mainChart {
 }
 
 .chart-overlay-item {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   color: var(--text-dim);
 }
@@ -787,24 +787,24 @@ canvas#mainChart {
 
 /* ===== PATTERN ANNOTATION ===== */
 .pattern-tag {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:13px;
   padding: 2px 7px;
   border-radius: 2px;
   letter-spacing: 0.5px;
 }
-.pattern-tag.flag-bull { background: rgba(0,229,160,0.15); color: var(--bull); border: 1px solid var(--bull-dim); }
-.pattern-tag.flag-bear { background: rgba(255,77,109,0.15); color: var(--bear); border: 1px solid var(--bear-dim); }
-.pattern-tag.dtop { background: rgba(255,77,109,0.15); color: var(--bear); border: 1px solid var(--bear-dim); }
-.pattern-tag.dbot { background: rgba(0,229,160,0.15); color: var(--bull); border: 1px solid var(--bull-dim); }
-.pattern-tag.ob { background: rgba(240,180,41,0.1); color: var(--gold); border: 1px solid var(--gold-dim); }
+.pattern-tag.flag-bull { background: rgba(61,214,160,0.15); color: var(--bull); border: 1px solid var(--bull-dim); }
+.pattern-tag.flag-bear { background: rgba(255,122,122,0.15); color: var(--bear); border: 1px solid var(--bear-dim); }
+.pattern-tag.dtop { background: rgba(255,122,122,0.15); color: var(--bear); border: 1px solid var(--bear-dim); }
+.pattern-tag.dbot { background: rgba(61,214,160,0.15); color: var(--bull); border: 1px solid var(--bull-dim); }
+.pattern-tag.ob { background: rgba(224,178,62,0.1); color: var(--gold); border: 1px solid var(--gold-dim); }
 .pattern-tag.sweep { background: rgba(74,158,255,0.1); color: var(--neutral); border: 1px solid var(--neutral-dim); }
 
 /* Loading */
 .loading-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(8,12,16,0.85);
+  background: rgba(13,16,19,0.85);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -822,7 +822,7 @@ canvas#mainChart {
 }
 
 .loading-text {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:15px;
   color: var(--text-dim);
   letter-spacing: 1px;
@@ -837,7 +837,7 @@ canvas#mainChart {
 
 .tab {
   padding: 8px 16px;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:14px;
   letter-spacing: 1px;
   color: var(--text-dim);
@@ -856,7 +856,7 @@ canvas#mainChart {
 .no-data {
   padding: 20px;
   text-align: center;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'IBM Plex Mono', monospace;
   font-size:15px;
   color: var(--text-dim);
   letter-spacing: 1px;

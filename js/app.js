@@ -1129,7 +1129,7 @@ function renderChart(candles, tf) {
   const candleW = Math.max(2*dpr, (chartW / displayCandles.length) * 0.55);
 
   // ── Background ────────────────────────────────────────────
-  ctx.fillStyle = '#080c10';
+  ctx.fillStyle = '#0D1013';
   ctx.fillRect(0, 0, W, H);
 
   // ── Grid ─────────────────────────────────────────────────
@@ -1144,7 +1144,7 @@ function renderChart(candles, tf) {
     ctx.stroke();
     const price = priceHigh - (i/6) * priceRange;
     ctx.fillStyle = 'rgba(90,122,150,0.7)';
-    ctx.font = `${11*dpr}px Share Tech Mono, monospace`;
+    ctx.font = `${11*dpr}px IBM Plex Mono, monospace`;
     ctx.textAlign = 'left';
     ctx.fillText(price.toFixed(1), W - padding.right + 4*dpr, y + 4*dpr);
   }
@@ -1156,8 +1156,8 @@ function renderChart(candles, tf) {
     const killZones = [
       { name: 'ASIAN',    startH: 0,  endH: 3,  color: 'rgba(160,100,255,0.30)', labelColor: 'rgba(200,160,255,1.0)'  },
       { name: 'LONDON',   startH: 8,  endH: 10, color: 'rgba(74,158,255,0.32)',  labelColor: 'rgba(120,190,255,1.0)'  },
-      { name: 'NEW YORK', startH: 13, endH: 15, color: 'rgba(240,180,41,0.32)',  labelColor: 'rgba(240,190,60,1.0)'   },
-      { name: 'LN CLOSE', startH: 15, endH: 17, color: 'rgba(255,77,109,0.28)', labelColor: 'rgba(255,100,130,0.95)' },
+      { name: 'NEW YORK', startH: 13, endH: 15, color: 'rgba(224,178,62,0.32)',  labelColor: 'rgba(240,190,60,1.0)'   },
+      { name: 'LN CLOSE', startH: 15, endH: 17, color: 'rgba(255,122,122,0.28)', labelColor: 'rgba(255,100,130,0.95)' },
     ];
 
     killZones.forEach(function(kz) {
@@ -1208,9 +1208,9 @@ function renderChart(candles, tf) {
 
         // Top label with background
         const kzLabel = kz.name;
-        ctx.font = 'bold ' + (11 * dpr) + 'px Share Tech Mono, monospace';
+        ctx.font = 'bold ' + (11 * dpr) + 'px IBM Plex Mono, monospace';
         const kzLabelW = ctx.measureText(kzLabel).width + 8*dpr;
-        ctx.fillStyle = 'rgba(8,12,16,0.8)';
+        ctx.fillStyle = 'rgba(13,16,19,0.8)';
         ctx.fillRect(startX + zoneW/2 - kzLabelW/2, padding.top + 2*dpr, kzLabelW, 15*dpr);
         ctx.fillStyle = kz.labelColor;
         ctx.textAlign = 'center';
@@ -1227,11 +1227,11 @@ function renderChart(candles, tf) {
     const boxH = Math.max(4*dpr, Math.abs(y2 - y1));
 
     // Transparent fill — green for bullish, red for bearish
-    ctx.fillStyle = isBull ? 'rgba(0,229,160,0.15)' : 'rgba(255,60,100,0.15)';
+    ctx.fillStyle = isBull ? 'rgba(61,214,160,0.15)' : 'rgba(255,60,100,0.15)';
     ctx.fillRect(padding.left, y1, chartW, boxH);
 
     // Top and bottom border lines
-    ctx.strokeStyle = isBull ? 'rgba(0,229,160,0.7)' : 'rgba(255,60,100,0.7)';
+    ctx.strokeStyle = isBull ? 'rgba(61,214,160,0.7)' : 'rgba(255,60,100,0.7)';
     ctx.lineWidth = 1.5*dpr;
     ctx.setLineDash([]);
     ctx.beginPath(); ctx.moveTo(padding.left, y1); ctx.lineTo(W - padding.right, y1); ctx.stroke();
@@ -1239,7 +1239,7 @@ function renderChart(candles, tf) {
 
     // Label pill on the LEFT side — short to fit mobile
     const label = `${isBull ? '▲' : '▼'} OB  ${ob.mid.toFixed(2)}`;
-    ctx.font = `bold ${11*dpr}px Share Tech Mono, monospace`;
+    ctx.font = `bold ${11*dpr}px IBM Plex Mono, monospace`;
     const lw = ctx.measureText(label).width + 10*dpr;
     const lx = padding.left + 4*dpr;
 
@@ -1247,7 +1247,7 @@ function renderChart(candles, tf) {
     // Place label near top border of box, not center
     const ly = y1 + 13*dpr;
 
-    ctx.fillStyle = isBull ? 'rgba(0,229,160,0.92)' : 'rgba(255,60,100,0.92)';
+    ctx.fillStyle = isBull ? 'rgba(61,214,160,0.92)' : 'rgba(255,60,100,0.92)';
     ctx.beginPath();
     ctx.roundRect(lx, ly - 11*dpr, lw, 16*dpr, 3*dpr);
     ctx.fill();
@@ -1275,7 +1275,7 @@ function renderChart(candles, tf) {
     // Label on right — stagger vertically to avoid overlap
     const offset = idx % 2 === 0 ? -8*dpr : 10*dpr;
     const liqLabel = `${isBuy ? '▲' : '▼'} LIQ  ${pool.price.toFixed(2)}`;
-    ctx.font = `${10*dpr}px Share Tech Mono, monospace`;
+    ctx.font = `${10*dpr}px IBM Plex Mono, monospace`;
     ctx.textAlign = 'right';
     ctx.fillStyle = 'rgba(74,158,255,0.9)';
     ctx.fillText(liqLabel, W - padding.right - 2*dpr, y + offset);
@@ -1291,14 +1291,14 @@ function renderChart(candles, tf) {
     const isBull = c.close >= c.open;
 
     // Wick
-    ctx.strokeStyle = isBull ? '#00e5a0' : '#ff4d6d';
+    ctx.strokeStyle = isBull ? '#3DD6A0' : '#FF7A7A';
     ctx.lineWidth = Math.max(1*dpr, candleW * 0.12);
     ctx.beginPath(); ctx.moveTo(x, highY); ctx.lineTo(x, lowY); ctx.stroke();
 
     // Body
     const bodyTop = Math.min(openY, closeY);
     const bodyH   = Math.max(2*dpr, Math.abs(openY - closeY));
-    ctx.fillStyle = isBull ? 'rgba(0,229,160,0.9)' : 'rgba(255,77,109,0.9)';
+    ctx.fillStyle = isBull ? 'rgba(61,214,160,0.9)' : 'rgba(255,122,122,0.9)';
     ctx.fillRect(x - candleW/2, bodyTop, candleW, bodyH);
   });
 
@@ -1307,7 +1307,7 @@ function renderChart(candles, tf) {
   swingHighs.slice(-4).forEach(sh => {
     const x = toX(sh.index);
     const y = toY(sh.price) - 7*dpr;
-    ctx.fillStyle = 'rgba(255,77,109,0.9)';
+    ctx.fillStyle = 'rgba(255,122,122,0.9)';
     ctx.font = `${10*dpr}px sans-serif`;
     ctx.textAlign = 'center';
     ctx.fillText('▼', x, y);
@@ -1315,7 +1315,7 @@ function renderChart(candles, tf) {
   swingLows.slice(-4).forEach(sl => {
     const x = toX(sl.index);
     const y = toY(sl.price) + 13*dpr;
-    ctx.fillStyle = 'rgba(0,229,160,0.9)';
+    ctx.fillStyle = 'rgba(61,214,160,0.9)';
     ctx.font = `${10*dpr}px sans-serif`;
     ctx.textAlign = 'center';
     ctx.fillText('▲', x, y);
@@ -1389,13 +1389,13 @@ function renderChart(candles, tf) {
       const fiboLevels = [
         { ratio: 0,     label: '0',     color: 'rgba(200,200,200,0.7)',  width: 1.5, dash: false },
         { ratio: 0.236, label: '23.6',  color: 'rgba(200,200,200,0.85)', width: 1.5, dash: false },
-        { ratio: 0.382, label: '38.2',  color: 'rgba(240,180,41,1.0)',   width: 2.5, dash: false }, // GOLD — highest prob
+        { ratio: 0.382, label: '38.2',  color: 'rgba(224,178,62,1.0)',   width: 2.5, dash: false }, // GOLD — highest prob
         { ratio: 0.5,   label: '50.0',  color: 'rgba(100,180,255,1.0)',  width: 2,   dash: false },
-        { ratio: 0.618, label: '61.8',  color: 'rgba(0,229,160,1.0)',    width: 2,   dash: false },
+        { ratio: 0.618, label: '61.8',  color: 'rgba(61,214,160,1.0)',    width: 2,   dash: false },
         { ratio: 0.786, label: '78.6',  color: 'rgba(200,200,200,0.6)',  width: 1,   dash: true  },
         { ratio: 1,     label: '100',   color: 'rgba(200,200,200,0.7)',  width: 1.5, dash: false },
         { ratio: 1.272, label: '127.2', color: 'rgba(255,100,130,0.9)',  width: 1.5, dash: true  },
-        { ratio: 1.618, label: '161.8', color: 'rgba(255,77,109,1.0)',   width: 2,   dash: true  },
+        { ratio: 1.618, label: '161.8', color: 'rgba(255,122,122,1.0)',   width: 2,   dash: true  },
       ];
 
       fiboLevels.forEach(function(fl) {
@@ -1424,19 +1424,19 @@ function renderChart(candles, tf) {
         // Label on right side with background box for readability
         const labelText = fl.label + '%  ' + price.toFixed(2);
         const fontSize = fl.ratio === 0.382 ? 11*dpr : 10*dpr;
-        ctx.font = (fl.ratio === 0.382 ? 'bold ' : '') + fontSize + 'px Share Tech Mono, monospace';
+        ctx.font = (fl.ratio === 0.382 ? 'bold ' : '') + fontSize + 'px IBM Plex Mono, monospace';
         ctx.textAlign = 'right';
         const textW = ctx.measureText(labelText).width;
         // Semi-transparent background behind label
-        ctx.fillStyle = 'rgba(8,12,16,0.75)';
+        ctx.fillStyle = 'rgba(13,16,19,0.75)';
         ctx.fillRect(W - padding.right - textW - 6*dpr, y - fontSize - 2*dpr, textW + 6*dpr, fontSize + 4*dpr);
         ctx.fillStyle = fl.color;
         ctx.fillText(labelText, W - padding.right - 2*dpr, y - 3*dpr);
       });
 
       // Draw a small annotation showing swing points used
-      ctx.fillStyle = 'rgba(240,180,41,0.5)';
-      ctx.font = (9*dpr) + 'px Share Tech Mono, monospace';
+      ctx.fillStyle = 'rgba(224,178,62,0.5)';
+      ctx.font = (9*dpr) + 'px IBM Plex Mono, monospace';
       ctx.textAlign = 'right';
       ctx.fillText('FIBO · 4H · ' + (isBullish4H ? 'BULL' : 'BEAR'), W - padding.right - 4*dpr, padding.top + 14*dpr);
     }
@@ -1444,7 +1444,7 @@ function renderChart(candles, tf) {
 
   // ── LAYER 6: Current price line + label ──────────────────
   const currentY = toY(currentPrice);
-  ctx.strokeStyle = 'rgba(240,180,41,0.9)';
+  ctx.strokeStyle = 'rgba(224,178,62,0.9)';
   ctx.lineWidth = 1.5*dpr;
   ctx.setLineDash([4*dpr, 3*dpr]);
   ctx.beginPath();
@@ -1456,19 +1456,19 @@ function renderChart(candles, tf) {
   // Gold price label box
   const lblW = padding.right - 2*dpr;
   const lblH = 20*dpr;
-  ctx.fillStyle = '#f0b429';
+  ctx.fillStyle = '#E0B23E';
   ctx.beginPath();
   ctx.roundRect(W - padding.right + 1*dpr, currentY - lblH/2, lblW, lblH, 3*dpr);
   ctx.fill();
   ctx.fillStyle = '#000';
-  ctx.font = `bold ${11*dpr}px Share Tech Mono, monospace`;
+  ctx.font = `bold ${11*dpr}px IBM Plex Mono, monospace`;
   ctx.textAlign = 'center';
   ctx.fillText(currentPrice.toFixed(2), W - padding.right + lblW/2, currentY + 4*dpr);
 
   // ── LAYER 7: LIVE / HISTORICAL indicator ─────────────────
   const viewLabel = isLiveView ? '● LIVE' : '◀ HISTORICAL';
-  const viewColor = isLiveView ? 'rgba(0,229,160,0.8)' : 'rgba(240,180,41,0.8)';
-  ctx.font = (9*dpr) + 'px Share Tech Mono, monospace';
+  const viewColor = isLiveView ? 'rgba(61,214,160,0.8)' : 'rgba(224,178,62,0.8)';
+  ctx.font = (9*dpr) + 'px IBM Plex Mono, monospace';
   ctx.textAlign = 'left';
   ctx.fillStyle = viewColor;
   ctx.fillText(viewLabel, padding.left + 4*dpr, padding.top + 12*dpr);
@@ -1493,13 +1493,13 @@ function renderChart(candles, tf) {
 
       // Build tooltip lines
       const lines = [
-        { label: timeLabel,                        color: 'rgba(240,180,41,0.9)', bold: true  },
+        { label: timeLabel,                        color: 'rgba(224,178,62,0.9)', bold: true  },
         { label: 'O: ' + tc.open.toFixed(2),       color: 'rgba(200,200,200,0.9)', bold: false },
-        { label: 'H: ' + tc.high.toFixed(2),       color: 'rgba(0,229,160,1.0)',   bold: false },
-        { label: 'L: ' + tc.low.toFixed(2),        color: 'rgba(255,77,109,1.0)',  bold: false },
-        { label: 'C: ' + tc.close.toFixed(2),      color: isBullC ? 'rgba(0,229,160,1.0)' : 'rgba(255,77,109,1.0)', bold: true },
+        { label: 'H: ' + tc.high.toFixed(2),       color: 'rgba(61,214,160,1.0)',   bold: false },
+        { label: 'L: ' + tc.low.toFixed(2),        color: 'rgba(255,122,122,1.0)',  bold: false },
+        { label: 'C: ' + tc.close.toFixed(2),      color: isBullC ? 'rgba(61,214,160,1.0)' : 'rgba(255,122,122,1.0)', bold: true },
         { label: 'Range: ' + candleRange + ' pts', color: 'rgba(150,150,150,0.8)', bold: false },
-        { label: isBullC ? '▲ BULLISH' : '▼ BEARISH', color: isBullC ? 'rgba(0,229,160,1.0)' : 'rgba(255,77,109,1.0)', bold: true },
+        { label: isBullC ? '▲ BULLISH' : '▼ BEARISH', color: isBullC ? 'rgba(61,214,160,1.0)' : 'rgba(255,122,122,1.0)', bold: true },
       ];
 
       const fontSize  = 10 * dpr;
@@ -1509,7 +1509,7 @@ function renderChart(candles, tf) {
       const tipH      = lines.length * lineH + tipPadY * 2;
 
       // Measure widest line
-      ctx.font = 'bold ' + fontSize + 'px Share Tech Mono, monospace';
+      ctx.font = 'bold ' + fontSize + 'px IBM Plex Mono, monospace';
       let maxW = 0;
       lines.forEach(function(l) {
         const w = ctx.measureText(l.label).width;
@@ -1535,7 +1535,7 @@ function renderChart(candles, tf) {
       }
 
       // Draw vertical crosshair line at candle
-      ctx.strokeStyle = 'rgba(240,180,41,0.3)';
+      ctx.strokeStyle = 'rgba(224,178,62,0.3)';
       ctx.lineWidth = 1 * dpr;
       ctx.setLineDash([3*dpr, 3*dpr]);
       ctx.beginPath();
@@ -1546,7 +1546,7 @@ function renderChart(candles, tf) {
 
       // Tooltip background
       ctx.fillStyle = 'rgba(8,14,22,0.96)';
-      ctx.strokeStyle = 'rgba(240,180,41,0.5)';
+      ctx.strokeStyle = 'rgba(224,178,62,0.5)';
       ctx.lineWidth = 1 * dpr;
       ctx.beginPath();
       ctx.roundRect(tipX, tipY, tipW, tipH, 4*dpr);
@@ -1555,7 +1555,7 @@ function renderChart(candles, tf) {
 
       // Draw each line
       lines.forEach(function(l, i) {
-        ctx.font = (l.bold ? 'bold ' : '') + fontSize + 'px Share Tech Mono, monospace';
+        ctx.font = (l.bold ? 'bold ' : '') + fontSize + 'px IBM Plex Mono, monospace';
         ctx.fillStyle = l.color;
         ctx.textAlign = 'left';
         ctx.fillText(l.label, tipX + tipPadX, tipY + tipPadY + fontSize + i * lineH);
@@ -1671,7 +1671,7 @@ function updateLevelsPanel(candles, tf) {
   const below = pools.filter(p => p.price < current).sort((a, b) => b.price - a.price);
 
   if (above.length > 0) {
-    html += `<div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim);letter-spacing:1px;padding:6px 0 4px;border-bottom:1px solid var(--border);">▲ LEVELS ABOVE</div>`;
+    html += `<div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim);letter-spacing:1px;padding:6px 0 4px;border-bottom:1px solid var(--border);">▲ LEVELS ABOVE</div>`;
     above.slice(0, 3).forEach(p => {
       html += `<div class="level-row">
         <span class="level-label">${p.description}</span>
@@ -1702,7 +1702,7 @@ function updateLevelsPanel(candles, tf) {
 
   // Levels below
   if (below.length > 0 || obs.filter(o => o.mid < current).length > 0) {
-    html += `<div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim);letter-spacing:1px;padding:6px 0 4px;border-bottom:1px solid var(--border);margin-top:6px;">▼ LEVELS BELOW</div>`;
+    html += `<div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim);letter-spacing:1px;padding:6px 0 4px;border-bottom:1px solid var(--border);margin-top:6px;">▼ LEVELS BELOW</div>`;
     below.slice(0, 3).forEach(p => {
       html += `<div class="level-row">
         <span class="level-label">${p.description}</span>
@@ -1812,18 +1812,18 @@ function updateSetupsPanel(candles, tf) {
     // Build TP rows for SL1
     const tp1rows = d.tp.sl1.map(t =>
       `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${t.label}</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-bright)">$${t.price}</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${t.pips}p</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--bull)">+$${t.profit}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${t.label}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-bright)">$${t.price}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${t.pips}p</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--bull)">+$${t.profit}</span>
       </div>`
     ).join('');
     const tp2rows = d.tp.sl2.map(t =>
       `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${t.label}</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-bright)">$${t.price}</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${t.pips}p</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--bull)">+$${t.profit}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${t.label}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-bright)">$${t.price}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${t.pips}p</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--bull)">+$${t.profit}</span>
       </div>`
     ).join('');
 
@@ -1831,7 +1831,7 @@ function updateSetupsPanel(candles, tf) {
       <div class="alert-header">
         <span class="alert-type" style="font-size:15px;">${arrow} ${s.name}</span>
         <span style="display:flex;gap:6px;align-items:center;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:11px;padding:2px 6px;border-radius:3px;background:rgba(255,255,255,0.07);color:${tfBadgeColor}">${s.signalTF || s.tf}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:2px 6px;border-radius:3px;background:rgba(255,255,255,0.07);color:${tfBadgeColor}">${s.signalTF || s.tf}</span>
           <span class="alert-time" style="color:${confColor};font-size:13px;">${effectiveConf}${activeKZ ? ' 🕐' : ''}</span>
         </span>
       </div>
@@ -1839,13 +1839,13 @@ function updateSetupsPanel(candles, tf) {
 
       <!-- ENTRY -->
       <div style="display:flex;justify-content:space-between;align-items:center;
-           padding:8px 10px;background:rgba(240,180,41,0.1);border-radius:4px;margin-bottom:8px;">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--gold)">ENTRY</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:17px;color:var(--gold);font-weight:bold;">$${s.entry}</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${s.tf}</span>
+           padding:8px 10px;background:rgba(224,178,62,0.1);border-radius:4px;margin-bottom:8px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold)">ENTRY</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:17px;color:var(--gold);font-weight:bold;">$${s.entry}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${s.tf}</span>
       </div>
       <!-- TIME TRIGGERED -->
-      <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim);
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);
            margin-bottom:8px;padding:4px 8px;background:rgba(255,255,255,0.03);border-radius:3px;
            display:flex;justify-content:space-between;">
         <span>⏱ TRIGGERED</span>
@@ -1854,14 +1854,14 @@ function updateSetupsPanel(candles, tf) {
       </div>
 
       <!-- SL1 -->
-      <div style="background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.3);
+      <div style="background:rgba(255,122,122,0.08);border:1px solid rgba(255,122,122,0.3);
            border-radius:4px;padding:8px 10px;margin-bottom:6px;">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--bear);
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--bear);
              letter-spacing:1px;margin-bottom:6px;">SL1 — FIXED RISK ($10 MAX)</div>
         <div style="display:flex;justify-content:space-between;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--text-bright)">$${d.sl1.price}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${d.sl1.pips} pips</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--bear)">-$${d.sl1.risk}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--text-bright)">$${d.sl1.price}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${d.sl1.pips} pips</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--bear)">-$${d.sl1.risk}</span>
         </div>
         <div style="margin-top:6px;">${tp1rows}</div>
       </div>
@@ -1869,17 +1869,17 @@ function updateSetupsPanel(candles, tf) {
       <!-- SL2 -->
       <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.3);
            border-radius:4px;padding:8px 10px;margin-bottom:4px;">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--warn);
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--warn);
              letter-spacing:1px;margin-bottom:6px;">SL2 — STRUCTURAL (BELOW SWEEP WICK)</div>
         <div style="display:flex;justify-content:space-between;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--text-bright)">$${d.sl2.price}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${d.sl2.pips} pips</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--warn)">-$${d.sl2.risk}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--text-bright)">$${d.sl2.price}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${d.sl2.pips} pips</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--warn)">-$${d.sl2.risk}</span>
         </div>
         <div style="margin-top:6px;">${tp2rows}</div>
       </div>
 
-      <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim);
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);
            margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06);">
         LOT: 0.10 &nbsp;|&nbsp; PIP VALUE: $0.10/pip &nbsp;|&nbsp; $10 move = 100 pips = $10 risk
       </div>
@@ -1915,39 +1915,39 @@ function addAlert(type, title, text, levels) {
     slHTML = `
     <div style="margin-top:8px;">
       <div style="display:flex;justify-content:space-between;align-items:center;
-           padding:6px 8px;background:rgba(240,180,41,0.1);border-radius:4px;margin-bottom:6px;">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--gold)">ENTRY</span>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--gold);font-weight:bold;">$${levels.entry}</span>
+           padding:6px 8px;background:rgba(224,178,62,0.1);border-radius:4px;margin-bottom:6px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold)">ENTRY</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:16px;color:var(--gold);font-weight:bold;">$${levels.entry}</span>
       </div>
-      <div style="background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.3);border-radius:4px;padding:7px 9px;margin-bottom:5px;">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--bear);margin-bottom:5px;">SL1 — FIXED ($10 RISK)</div>
+      <div style="background:rgba(255,122,122,0.08);border:1px solid rgba(255,122,122,0.3);border-radius:4px;padding:7px 9px;margin-bottom:5px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--bear);margin-bottom:5px;">SL1 — FIXED ($10 RISK)</div>
         <div style="display:flex;justify-content:space-between;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--text-bright)">$${d.sl1.price}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim)">${d.sl1.pips} pips</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--bear)">-$${d.sl1.risk}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--text-bright)">$${d.sl1.price}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">${d.sl1.pips} pips</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--bear)">-$${d.sl1.risk}</span>
         </div>
         ${d.tp.sl1.map(t => `<div style="display:flex;justify-content:space-between;padding:2px 0;border-top:1px solid rgba(255,255,255,0.05);margin-top:3px;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim)">${t.label}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-bright)">$${t.price}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim)">${t.pips}p</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--bull)">+$${t.profit}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">${t.label}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-bright)">$${t.price}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">${t.pips}p</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--bull)">+$${t.profit}</span>
         </div>`).join('')}
       </div>
       <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.3);border-radius:4px;padding:7px 9px;">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--warn);margin-bottom:5px;">SL2 — STRUCTURAL (BELOW SWEEP WICK)</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--warn);margin-bottom:5px;">SL2 — STRUCTURAL (BELOW SWEEP WICK)</div>
         <div style="display:flex;justify-content:space-between;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--text-bright)">$${d.sl2.price}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim)">${d.sl2.pips} pips</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--warn)">-$${d.sl2.risk}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--text-bright)">$${d.sl2.price}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">${d.sl2.pips} pips</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--warn)">-$${d.sl2.risk}</span>
         </div>
         ${d.tp.sl2.map(t => `<div style="display:flex;justify-content:space-between;padding:2px 0;border-top:1px solid rgba(255,255,255,0.05);margin-top:3px;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim)">${t.label}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-bright)">$${t.price}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim)">${t.pips}p</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--bull)">+$${t.profit}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">${t.label}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-bright)">$${t.price}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">${t.pips}p</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--bull)">+$${t.profit}</span>
         </div>`).join('')}
       </div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:5px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:5px;">
         LOT: 0.10 &nbsp;|&nbsp; $0.10/pip &nbsp;|&nbsp; $10 move = 100 pips = $10 risk
       </div>
     </div>`;
@@ -2192,25 +2192,25 @@ function openWeeklyReport() {
     return `
       <div style="border:1px solid var(--border2);border-radius:6px;padding:12px;margin-bottom:10px;background:rgba(255,255,255,0.02);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--gold);letter-spacing:1px;">${label}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:${dirCol}">${dir} ${dChg>0?'+':''}${dChg.toFixed(2)} (${dChgPct}%)</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--gold);letter-spacing:1px;">${label}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:${dirCol}">${dir} ${dChg>0?'+':''}${dChg.toFixed(2)} (${dChgPct}%)</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;">
-          <div style="text-align:center;padding:4px;background:rgba(0,229,160,0.08);border-radius:4px;">
+          <div style="text-align:center;padding:4px;background:rgba(61,214,160,0.08);border-radius:4px;">
             <div style="font-size:10px;color:var(--text-dim)">OPEN</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-bright)">${dOpen.toFixed(2)}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-bright)">${dOpen.toFixed(2)}</div>
           </div>
-          <div style="text-align:center;padding:4px;background:rgba(0,229,160,0.08);border-radius:4px;">
+          <div style="text-align:center;padding:4px;background:rgba(61,214,160,0.08);border-radius:4px;">
             <div style="font-size:10px;color:var(--text-dim)">HIGH</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--bull)">${dHigh.toFixed(2)}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--bull)">${dHigh.toFixed(2)}</div>
           </div>
-          <div style="text-align:center;padding:4px;background:rgba(255,77,109,0.08);border-radius:4px;">
+          <div style="text-align:center;padding:4px;background:rgba(255,122,122,0.08);border-radius:4px;">
             <div style="font-size:10px;color:var(--text-dim)">LOW</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--bear)">${dLow.toFixed(2)}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--bear)">${dLow.toFixed(2)}</div>
           </div>
-          <div style="text-align:center;padding:4px;background:rgba(240,180,41,0.08);border-radius:4px;">
+          <div style="text-align:center;padding:4px;background:rgba(224,178,62,0.08);border-radius:4px;">
             <div style="font-size:10px;color:var(--text-dim)">CLOSE</div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--gold)">${dClose.toFixed(2)}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold)">${dClose.toFixed(2)}</div>
           </div>
         </div>
         <div style="font-size:12px;color:var(--text-dim)">Range: ${dRange} pts &nbsp;|&nbsp; ${events.length ? events.join(' &nbsp;·&nbsp; ') : (note || 'No major structural events')}</div>
@@ -2229,17 +2229,17 @@ function openWeeklyReport() {
            padding:8px 10px;border:1px solid var(--border);border-radius:5px;margin-bottom:6px;
            background:rgba(255,255,255,0.02);">
         <div>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;
                 color:${t.type==='BUY'?'var(--bull)':'var(--bear)'};">${t.type==='BUY'?'▲':'▼'} ${t.type}</span>
-          <span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim);margin-left:8px;">${t.name}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);margin-left:8px;">${t.name}</span>
         </div>
         <div style="text-align:center;">
-          <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--gold)">$${t.entry.toFixed(2)}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--gold)">$${t.entry.toFixed(2)}</div>
           <div style="font-size:10px;color:var(--text-dim)">${t.time} ${t.tf}</div>
         </div>
         <div style="text-align:right;">
-          <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:${col}">${label}</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:${pnlCol}">${t.pnl>0?'+':''}${t.pnl.toFixed(2)}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:${col}">${label}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:${pnlCol}">${t.pnl>0?'+':''}${t.pnl.toFixed(2)}</div>
         </div>
       </div>`;
   }
@@ -2275,29 +2275,29 @@ function openWeeklyReport() {
   reportEl.innerHTML = `
     <!-- HEADER -->
     <div style="text-align:center;padding:16px 0 20px;border-bottom:1px solid var(--border);margin-bottom:20px;">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:2px;">WEEKLY TRADING REPORT</div>
-      <div style="font-family:'Exo 2',sans-serif;font-size:20px;font-weight:800;color:var(--gold);margin:6px 0;">XAUUSD — GOLD</div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim)">Week ending ${weekStr}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:2px;">WEEKLY TRADING REPORT</div>
+      <div style="font-family:'Inter',sans-serif;font-size:20px;font-weight:800;color:var(--gold);margin:6px 0;">XAUUSD — GOLD</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">Week ending ${weekStr}</div>
       <div style="margin-top:12px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
         <div style="text-align:center;">
           <div style="font-size:10px;color:var(--text-dim)">WEEKLY OPEN</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--text-bright)">$${weekOpen.toFixed(2)}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--text-bright)">$${weekOpen.toFixed(2)}</div>
         </div>
         <div style="text-align:center;">
           <div style="font-size:10px;color:var(--text-dim)">CURRENT</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--gold)">$${current.toFixed(2)}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--gold)">$${current.toFixed(2)}</div>
         </div>
         <div style="text-align:center;">
           <div style="font-size:10px;color:var(--text-dim)">WEEK HIGH</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--bull)">$${weekHigh.toFixed(2)}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--bull)">$${weekHigh.toFixed(2)}</div>
         </div>
         <div style="text-align:center;">
           <div style="font-size:10px;color:var(--text-dim)">WEEK LOW</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--bear)">$${weekLow.toFixed(2)}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--bear)">$${weekLow.toFixed(2)}</div>
         </div>
         <div style="text-align:center;">
           <div style="font-size:10px;color:var(--text-dim)">WEEK CHANGE</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:15px;color:${isBullWeek?'var(--bull)':'var(--bear)'}">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:${isBullWeek?'var(--bull)':'var(--bear)'}">
             ${isBullWeek?'+':''}${weekChange}%
           </div>
         </div>
@@ -2323,17 +2323,17 @@ function openWeeklyReport() {
     <div class="modal-section">
       <div class="modal-section-title">📊 PERFORMANCE SUMMARY</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
-        <div style="text-align:center;padding:10px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:6px;">
+        <div style="text-align:center;padding:10px;background:rgba(61,214,160,0.08);border:1px solid rgba(61,214,160,0.2);border-radius:6px;">
           <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px;">TOTAL TRADES</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:22px;color:var(--gold)">${STATE.tradeLog.length}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:var(--gold)">${STATE.tradeLog.length}</div>
         </div>
-        <div style="text-align:center;padding:10px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:6px;">
+        <div style="text-align:center;padding:10px;background:rgba(61,214,160,0.08);border:1px solid rgba(61,214,160,0.2);border-radius:6px;">
           <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px;">WIN RATE</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:22px;color:${parseInt(winRate)>=60?'var(--bull)':'var(--warn)'}">${winRate}%</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:${parseInt(winRate)>=60?'var(--bull)':'var(--warn)'}">${winRate}%</div>
         </div>
-        <div style="text-align:center;padding:10px;background:${totalPnL>=0?'rgba(0,229,160,0.08)':'rgba(255,77,109,0.08)'};border:1px solid ${totalPnL>=0?'rgba(0,229,160,0.2)':'rgba(255,77,109,0.2)'};border-radius:6px;">
+        <div style="text-align:center;padding:10px;background:${totalPnL>=0?'rgba(61,214,160,0.08)':'rgba(255,122,122,0.08)'};border:1px solid ${totalPnL>=0?'rgba(61,214,160,0.2)':'rgba(255,122,122,0.2)'};border-radius:6px;">
           <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px;">NET P&L</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:22px;color:${totalPnL>=0?'var(--bull)':'var(--bear)'}">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:${totalPnL>=0?'var(--bull)':'var(--bear)'}">
             ${totalPnL>=0?'+':''}\$${totalPnL.toFixed(2)}
           </div>
         </div>
@@ -2341,35 +2341,35 @@ function openWeeklyReport() {
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
         <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:5px;">
           <div style="font-size:10px;color:var(--text-dim)">WINS</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:18px;color:var(--bull)">${wins}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--bull)">${wins}</div>
         </div>
         <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:5px;">
           <div style="font-size:10px;color:var(--text-dim)">LOSSES</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:18px;color:var(--bear)">${losses}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--bear)">${losses}</div>
         </div>
         <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:5px;">
           <div style="font-size:10px;color:var(--text-dim)">OPEN</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:18px;color:var(--warn)">${openTrades}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--warn)">${openTrades}</div>
         </div>
         <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:5px;">
           <div style="font-size:10px;color:var(--text-dim)">SL HITS</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:18px;color:var(--bear)">${slCount}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--bear)">${slCount}</div>
         </div>
       </div>
       <div style="margin-top:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
-        <div style="text-align:center;padding:8px;background:rgba(0,229,160,0.05);border-radius:5px;">
+        <div style="text-align:center;padding:8px;background:rgba(61,214,160,0.05);border-radius:5px;">
           <div style="font-size:10px;color:var(--text-dim)">TP1 HITS</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--bull)">${tp1Count}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;color:var(--bull)">${tp1Count}</div>
           <div style="font-size:10px;color:var(--bull)">+$${(tp1Count*20).toFixed(0)}</div>
         </div>
-        <div style="text-align:center;padding:8px;background:rgba(0,229,160,0.05);border-radius:5px;">
+        <div style="text-align:center;padding:8px;background:rgba(61,214,160,0.05);border-radius:5px;">
           <div style="font-size:10px;color:var(--text-dim)">TP2 HITS</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--bull)">${tp2Count}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;color:var(--bull)">${tp2Count}</div>
           <div style="font-size:10px;color:var(--bull)">+$${(tp2Count*30).toFixed(0)}</div>
         </div>
-        <div style="text-align:center;padding:8px;background:rgba(0,229,160,0.05);border-radius:5px;">
+        <div style="text-align:center;padding:8px;background:rgba(61,214,160,0.05);border-radius:5px;">
           <div style="font-size:10px;color:var(--text-dim)">TP3 HITS</div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--bull)">${tp3Count}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;color:var(--bull)">${tp3Count}</div>
           <div style="font-size:10px;color:var(--bull)">+$${(tp3Count*50).toFixed(0)}</div>
         </div>
       </div>
@@ -2379,46 +2379,46 @@ function openWeeklyReport() {
     <div class="modal-section">
       <div class="modal-section-title">🎯 KEY LEVELS — NEXT WEEK</div>
       <div style="margin-bottom:12px;">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--bear);letter-spacing:1px;margin-bottom:8px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--bear);letter-spacing:1px;margin-bottom:8px;">
           ▼ RESISTANCE ABOVE — SELL ZONES
         </div>
         ${bearOBs.map(o=>`
           <div style="display:flex;justify-content:space-between;padding:6px 10px;
-               border-left:3px solid var(--bear);background:rgba(255,77,109,0.06);
+               border-left:3px solid var(--bear);background:rgba(255,122,122,0.06);
                border-radius:0 4px 4px 0;margin-bottom:4px;">
-            <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">Bearish OB (str: ${o.strength}x)</span>
-            <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--bear)">$${o.mid.toFixed(2)}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">Bearish OB (str: ${o.strength}x)</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--bear)">$${o.mid.toFixed(2)}</span>
           </div>`).join('')}
         ${topResist.map(p=>`
           <div style="display:flex;justify-content:space-between;padding:6px 10px;
-               border-left:3px solid rgba(255,77,109,0.5);background:rgba(255,77,109,0.04);
+               border-left:3px solid rgba(255,122,122,0.5);background:rgba(255,122,122,0.04);
                border-radius:0 4px 4px 0;margin-bottom:4px;">
-            <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${p.description}</span>
-            <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-bright)">$${p.price.toFixed(2)}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${p.description}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-bright)">$${p.price.toFixed(2)}</span>
           </div>`).join('')}
       </div>
-      <div style="text-align:center;padding:8px;background:rgba(240,180,41,0.1);border-radius:4px;margin:10px 0;">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--gold)">
+      <div style="text-align:center;padding:8px;background:rgba(224,178,62,0.1);border-radius:4px;margin:10px 0;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--gold)">
           CURRENT PRICE: $${current.toFixed(2)}
         </span>
       </div>
       <div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--bull);letter-spacing:1px;margin-bottom:8px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--bull);letter-spacing:1px;margin-bottom:8px;">
           ▲ SUPPORT BELOW — BUY ZONES
         </div>
         ${bullOBs.map(o=>`
           <div style="display:flex;justify-content:space-between;padding:6px 10px;
-               border-left:3px solid var(--bull);background:rgba(0,229,160,0.06);
+               border-left:3px solid var(--bull);background:rgba(61,214,160,0.06);
                border-radius:0 4px 4px 0;margin-bottom:4px;">
-            <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">Bullish OB (str: ${o.strength}x)</span>
-            <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--bull)">$${o.mid.toFixed(2)}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">Bullish OB (str: ${o.strength}x)</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--bull)">$${o.mid.toFixed(2)}</span>
           </div>`).join('')}
         ${botSupport.map(p=>`
           <div style="display:flex;justify-content:space-between;padding:6px 10px;
-               border-left:3px solid rgba(0,229,160,0.5);background:rgba(0,229,160,0.04);
+               border-left:3px solid rgba(61,214,160,0.5);background:rgba(61,214,160,0.04);
                border-radius:0 4px 4px 0;margin-bottom:4px;">
-            <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim)">${p.description}</span>
-            <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-bright)">$${p.price.toFixed(2)}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim)">${p.description}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-bright)">$${p.price.toFixed(2)}</span>
           </div>`).join('')}
       </div>
     </div>
@@ -2427,11 +2427,11 @@ function openWeeklyReport() {
     <div class="modal-section">
       <div class="modal-section-title">🔮 NEXT WEEK BIAS & FORECAST</div>
       <div style="text-align:center;padding:12px;margin-bottom:12px;
-           background:${biasNext==='BULLISH'?'rgba(0,229,160,0.1)':biasNext==='BEARISH'?'rgba(255,77,109,0.1)':'rgba(74,158,255,0.1)'};
-           border:1px solid ${biasNext==='BULLISH'?'rgba(0,229,160,0.3)':biasNext==='BEARISH'?'rgba(255,77,109,0.3)':'rgba(74,158,255,0.3)'};
+           background:${biasNext==='BULLISH'?'rgba(61,214,160,0.1)':biasNext==='BEARISH'?'rgba(255,122,122,0.1)':'rgba(74,158,255,0.1)'};
+           border:1px solid ${biasNext==='BULLISH'?'rgba(61,214,160,0.3)':biasNext==='BEARISH'?'rgba(255,122,122,0.3)':'rgba(74,158,255,0.3)'};
            border-radius:6px;">
         <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">PROJECTED BIAS</div>
-        <div style="font-family:'Exo 2',sans-serif;font-size:24px;font-weight:800;
+        <div style="font-family:'Inter',sans-serif;font-size:24px;font-weight:800;
              color:${biasNext==='BULLISH'?'var(--bull)':biasNext==='BEARISH'?'var(--bear)':'var(--neutral)'}">
           ${biasNext==='BULLISH'?'▲ BULLISH':biasNext==='BEARISH'?'▼ BEARISH':'◆ NEUTRAL'}
         </div>
@@ -2548,9 +2548,9 @@ function showDemoBanner() {
   banner.style.cssText = `
     position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
     background:rgba(13,17,23,0.97); border:1px solid var(--gold-dim);
-    color:var(--text); font-family:'Share Tech Mono',monospace; font-size:15px;
+    color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:15px;
     padding:12px 20px; border-radius:6px; z-index:200; text-align:center;
-    box-shadow:0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(240,180,41,0.15);
+    box-shadow:0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(224,178,62,0.15);
     max-width:90vw; line-height:1.6;
   `;
   banner.innerHTML = `
@@ -2559,13 +2559,13 @@ function showDemoBanner() {
     All structure analysis, OBs, setups and alerts work on demo data.</div>
     <div style="margin-top:8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
       <button onclick="manualRefresh();document.getElementById('demoBanner').remove()" style="
-        background:rgba(0,229,160,0.15); border:1px solid rgba(0,229,160,0.4);
-        color:#00e5a0; font-family:'Share Tech Mono',monospace; font-size:14px;
+        background:rgba(61,214,160,0.15); border:1px solid rgba(61,214,160,0.4);
+        color:#3DD6A0; font-family:'IBM Plex Mono',monospace; font-size:14px;
         padding:5px 14px; border-radius:3px; cursor:pointer; letter-spacing:1px;
       ">⟳ RETRY</button>
       <button onclick="document.getElementById('demoBanner').remove()" style="
-        background:rgba(240,180,41,0.1); border:1px solid var(--gold-dim);
-        color:var(--gold); font-family:'Share Tech Mono',monospace; font-size:14px;
+        background:rgba(224,178,62,0.1); border:1px solid var(--gold-dim);
+        color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:14px;
         padding:5px 14px; border-radius:3px; cursor:pointer; letter-spacing:1px;
       ">OK</button>
     </div>
@@ -2998,15 +2998,15 @@ function showRateLimitWarning() {
   const banner = document.createElement('div');
   banner.id = 'rateLimitBanner';
   banner.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);' +
-    'background:rgba(13,17,23,0.97);border:1px solid rgba(255,77,109,0.6);' +
-    'color:var(--text);font-family:Share Tech Mono,monospace;font-size:14px;' +
+    'background:rgba(13,17,23,0.97);border:1px solid rgba(255,122,122,0.6);' +
+    'color:var(--text);font-family:IBM Plex Mono,monospace;font-size:14px;' +
     'padding:12px 20px;border-radius:6px;z-index:200;text-align:center;max-width:90vw;line-height:1.6;';
   banner.innerHTML =
-    '<div style="color:#ff4d6d;font-size:15px;margin-bottom:4px;">⚠ API RATE LIMIT REACHED</div>' +
+    '<div style="color:#FF7A7A;font-size:15px;margin-bottom:4px;">⚠ API RATE LIMIT REACHED</div>' +
     '<div style="color:var(--text-dim)">TwelveData free tier limit hit. App will retry automatically.</div>' +
     '<button onclick="document.getElementById(\'rateLimitBanner\').remove()" style="' +
-    'margin-top:8px;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.4);' +
-    'color:#ff4d6d;font-family:Share Tech Mono,monospace;font-size:13px;' +
+    'margin-top:8px;background:rgba(255,122,122,0.15);border:1px solid rgba(255,122,122,0.4);' +
+    'color:#FF7A7A;font-family:IBM Plex Mono,monospace;font-size:13px;' +
     'padding:4px 14px;border-radius:3px;cursor:pointer;">DISMISS</button>';
   document.body.appendChild(banner);
   setTimeout(() => { if (banner) banner.remove(); }, 30000);
@@ -3021,8 +3021,8 @@ function getActiveKillZone() {
   var gmtDecimal = gmtH + gmtM / 60;
   if (gmtDecimal >= 0    && gmtDecimal < 3)  return { name: 'ASIAN SESSION',    color: 'rgba(160,100,255,0.9)' };
   if (gmtDecimal >= 8    && gmtDecimal < 10) return { name: 'LONDON OPEN',      color: 'rgba(74,158,255,0.9)'  };
-  if (gmtDecimal >= 13   && gmtDecimal < 15) return { name: 'NEW YORK OPEN',    color: 'rgba(240,180,41,0.9)'  };
-  if (gmtDecimal >= 15   && gmtDecimal < 17) return { name: 'LONDON CLOSE',     color: 'rgba(255,77,109,0.9)'  };
+  if (gmtDecimal >= 13   && gmtDecimal < 15) return { name: 'NEW YORK OPEN',    color: 'rgba(224,178,62,0.9)'  };
+  if (gmtDecimal >= 15   && gmtDecimal < 17) return { name: 'LONDON CLOSE',     color: 'rgba(255,122,122,0.9)'  };
   return null;
 }
 
@@ -3048,14 +3048,14 @@ function toggleFibo() {
   STATE.showFibo = !STATE.showFibo;
   const btn = document.getElementById('fiboBtn');
   if (STATE.showFibo) {
-    btn.style.background = 'rgba(240,180,41,0.25)';
-    btn.style.borderColor = 'rgba(240,180,41,0.8)';
-    btn.style.color = '#f0b429';
+    btn.style.background = 'rgba(224,178,62,0.25)';
+    btn.style.borderColor = 'rgba(224,178,62,0.8)';
+    btn.style.color = '#E0B23E';
     btn.textContent = 'FIBO ✓';
   } else {
-    btn.style.background = 'rgba(240,180,41,0.08)';
-    btn.style.borderColor = 'rgba(240,180,41,0.3)';
-    btn.style.color = 'rgba(240,180,41,0.6)';
+    btn.style.background = 'rgba(224,178,62,0.08)';
+    btn.style.borderColor = 'rgba(224,178,62,0.3)';
+    btn.style.color = 'rgba(224,178,62,0.6)';
     btn.textContent = 'FIBO';
   }
   // Redraw chart
@@ -3145,11 +3145,11 @@ function drawTooltip(candleData, xPixel, yPixel) {
   var lines = [
     { label: '🕐', value: timeStr, color: 'rgba(200,200,200,0.9)' },
     { label: 'O', value: c.open.toFixed(2),  color: 'rgba(200,200,200,0.85)' },
-    { label: 'H', value: c.high.toFixed(2),  color: 'rgba(0,229,160,1.0)'    },
-    { label: 'L', value: c.low.toFixed(2),   color: 'rgba(255,77,109,1.0)'   },
-    { label: 'C', value: c.close.toFixed(2), color: isBull ? 'rgba(0,229,160,1.0)' : 'rgba(255,77,109,1.0)' },
-    { label: 'RNG', value: range + ' pts',   color: 'rgba(240,180,41,0.9)'   },
-    { label: '', value: (isBull ? '▲ BULLISH' : '▼ BEARISH'), color: isBull ? 'rgba(0,229,160,1.0)' : 'rgba(255,77,109,1.0)' },
+    { label: 'H', value: c.high.toFixed(2),  color: 'rgba(61,214,160,1.0)'    },
+    { label: 'L', value: c.low.toFixed(2),   color: 'rgba(255,122,122,1.0)'   },
+    { label: 'C', value: c.close.toFixed(2), color: isBull ? 'rgba(61,214,160,1.0)' : 'rgba(255,122,122,1.0)' },
+    { label: 'RNG', value: range + ' pts',   color: 'rgba(224,178,62,0.9)'   },
+    { label: '', value: (isBull ? '▲ BULLISH' : '▼ BEARISH'), color: isBull ? 'rgba(61,214,160,1.0)' : 'rgba(255,122,122,1.0)' },
   ];
 
   var fontSize   = 11 * dpr;
@@ -3181,14 +3181,14 @@ function drawTooltip(candleData, xPixel, yPixel) {
 
   // Border — bull green or bear red
   ctx.shadowBlur  = 0;
-  ctx.strokeStyle = isBull ? 'rgba(0,229,160,0.6)' : 'rgba(255,77,109,0.6)';
+  ctx.strokeStyle = isBull ? 'rgba(61,214,160,0.6)' : 'rgba(255,122,122,0.6)';
   ctx.lineWidth   = 1.5 * dpr;
   ctx.beginPath();
   ctx.roundRect(xPos, yPos, boxW, boxH, 5 * dpr);
   ctx.stroke();
 
   // Draw each line
-  ctx.font = fontSize + 'px Share Tech Mono, monospace';
+  ctx.font = fontSize + 'px IBM Plex Mono, monospace';
   lines.forEach(function(line, i) {
     var lineY = yPos + padY + (i + 0.75) * lineHeight;
     // Label
@@ -3202,7 +3202,7 @@ function drawTooltip(candleData, xPixel, yPixel) {
   });
 
   // Crosshair vertical line on main chart position
-  ctx.strokeStyle = 'rgba(240,180,41,0.25)';
+  ctx.strokeStyle = 'rgba(224,178,62,0.25)';
   ctx.lineWidth   = 1 * dpr;
   ctx.setLineDash([3 * dpr, 3 * dpr]);
   ctx.beginPath();
