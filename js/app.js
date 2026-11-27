@@ -2102,10 +2102,39 @@ function openWeeklyReport() {
   const current  = candles.length > 0 ? candles[candles.length-1].close : 0;
 
   // ── Weekly price data ─────────────────────────────────────
-  const weekCandles = candles.slice(-120);
-  const weekHigh  = weekCandles.length ? Math.max(...weekCandles.map(c=>c.high)) : 0;
-  const weekLow   = weekCandles.length ? Math.min(...weekCandles.map(c=>c.low))  : 0;
-  const weekOpen  = weekCandles.length ? weekCandles[0].open : 0;
+  // Current Mon–Fri week in WAT (on Sat/Sun this is the week that just ended).
+  // Candle times are UTC. Weekly stats use D1 bars where intraday data doesn't cover the
+  // whole day, because the 100-candle 1H window only reaches back ~4 trading days.
+  const WAT_MS   = 60 * 60000;
+  const watDate  = ts => new Date(ts + WAT_MS).toISOString().slice(0, 10);
+  const nowWAT   = new Date(Date.now() + WAT_MS);
+  const todayStr = nowWAT.toISOString().slice(0, 10);
+  const dowNow   = nowWAT.getUTCDay();                                  // 0 Sun … 6 Sat
+  const sinceMon = dowNow === 0 ? 6 : dowNow === 6 ? 5 : dowNow - 1;    // days since this report's Monday
+  const dayData  = [];
+  ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'].forEach((name, i) => {
+    const dateStr = new Date(nowWAT.getTime() - (sinceMon - i) * 86400000).toISOString().slice(0, 10);
+    if (dateStr > todayStr) return;                                     // day hasn't happened yet
+    const isToday = dateStr === todayStr;
+    const dc  = candles.filter(c => { const ts = candleTs(c); return ts && watDate(ts) === dateStr; });
+    const bar = d1.find(c => String(c.time).slice(0, 10) === dateStr) || null;
+    dayData.push({
+      label: isToday ? name + ' (today)' : name,
+      dc, bar,
+      full: dc.length >= 20 || (isToday && dc.length >= 2),
+    });
+  });
+
+  const dayOHLC = dayData.map(d => {
+    if (d.full) return { o: d.dc[0].open, h: Math.max(...d.dc.map(c => c.high)), l: Math.min(...d.dc.map(c => c.low)), c: d.dc[d.dc.length - 1].close };
+    if (d.bar)  return { o: d.bar.open, h: d.bar.high, l: d.bar.low, c: d.bar.close };
+    if (d.dc.length >= 2) return { o: d.dc[0].open, h: Math.max(...d.dc.map(c => c.high)), l: Math.min(...d.dc.map(c => c.low)), c: d.dc[d.dc.length - 1].close };
+    return null;
+  }).filter(Boolean);
+
+  const weekHigh  = dayOHLC.length ? Math.max(...dayOHLC.map(x => x.h)) : (candles.length ? Math.max(...candles.map(c => c.high)) : 0);
+  const weekLow   = dayOHLC.length ? Math.min(...dayOHLC.map(x => x.l)) : (candles.length ? Math.min(...candles.map(c => c.low))  : 0);
+  const weekOpen  = dayOHLC.length ? dayOHLC[0].o : (candles.length ? candles[0].open : 0);
   const weekChange = weekOpen > 0 ? ((current-weekOpen)/weekOpen*100).toFixed(2) : '0';
   const isBullWeek = parseFloat(weekChange) > 0;
 
@@ -2113,55 +2142,52 @@ function openWeeklyReport() {
   const struct  = detectStructure(candles);
   const pattern = detectPattern(candles);
   const obs     = detectOrderBlocks(candles);
-  const pools   = detectLiquidityPools(candles, STATE.currentTF);
+  const candlesTF = STATE.candles['1H'] ? '1H' : STATE.currentTF;   // pools must be computed on the TF these candles are
+  const pools   = detectLiquidityPools(candles, candlesTF);
   const d1Struct = d1.length > 20 ? detectStructure(d1) : null;
   const h4Struct = h4.length > 20 ? detectStructure(h4) : null;
 
   // ── Day by day narrative ──────────────────────────────────
-  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const today = new Date();
-  // Build last 5 trading days from 1H candles (24 candles per day)
-  function getDayCandles(daysAgo) {
-    const watOffset = 60; // WAT = UTC+1, in minutes
-    const now = new Date();
-    const target = new Date(now.getTime() + watOffset * 60000);
-    target.setUTCDate(target.getUTCDate() - daysAgo);
-    const targetDate = target.toISOString().slice(0, 10);
-
-    return candles.filter(function(c) {
-      try {
-        // c.time can be unix seconds (number) or ISO string
-        var ts = typeof c.time === 'number' ? c.time * 1000 : new Date(c.time).getTime();
-        if (!ts || isNaN(ts)) return false;
-        var cDate = new Date(ts + watOffset * 60000);
-        return cDate.toISOString().slice(0, 10) === targetDate;
-      } catch(e) { return false; }
-    });
-  }
-
-  function narrateDay(dc, label) {
-    if (!dc || dc.length < 2) return '';
-    const dHigh  = Math.max(...dc.map(c=>c.high));
-    const dLow   = Math.min(...dc.map(c=>c.low));
-    const dOpen  = dc[0].open;
-    const dClose = dc[dc.length-1].close;
-    const dChg   = dClose - dOpen;
-    const dChgPct = (dChg/dOpen*100).toFixed(2);
-    const dRange = (dHigh-dLow).toFixed(2);
-    const dir    = dChg > 0 ? '▲ BULLISH' : '▼ BEARISH';
-    const dirCol = dChg > 0 ? 'var(--bull)' : 'var(--bear)';
-
-    // Detect key events that day
-    const daySweep  = detectSweep(dc);
-    const dayBOS    = detectStructure(dc).bos;
-    const dayCHoCH  = detectCHoCH(dc.slice(-20), '1H');
-    const dayOBs    = detectOrderBlocks(dc);
-
+  // Uses the dayData built above. Intraday (1H) detail where loaded, otherwise the D1 bar.
+  function narrateDay(day) {
+    const dc = day.dc, label = day.label;
+    let dOpen, dHigh, dLow, dClose;
     let events = [];
-    if (daySweep) events.push(`${daySweep.type === 'BUY-SIDE SWEPT' ? '🔴 BSL swept' : '🟢 SSL swept'} at $${daySweep.level.toFixed(2)}`);
-    if (dayBOS)   events.push(`${dayBOS.type} confirmed at $${dayBOS.level.toFixed(2)}`);
-    if (dayCHoCH) events.push(`${dayCHoCH.type} on 1H at $${dayCHoCH.level.toFixed(2)}`);
-    if (dayOBs.length) events.push(`${dayOBs.length} Order Block${dayOBs.length>1?'s':''} active`);
+    let note = '';
+
+    if (day.full) {
+      dOpen  = dc[0].open;
+      dClose = dc[dc.length-1].close;
+      dHigh  = Math.max(...dc.map(c=>c.high));
+      dLow   = Math.min(...dc.map(c=>c.low));
+
+      // Detect key events that day
+      const daySweep  = detectSweep(dc);
+      const dayBOS    = detectStructure(dc).bos;
+      const dayCHoCH  = detectCHoCH(dc.slice(-20), '1H');
+      const dayOBs    = detectOrderBlocks(dc);
+      if (daySweep) events.push(`${daySweep.type === 'BUY-SIDE SWEPT' ? '🔴 BSL swept' : '🟢 SSL swept'} at $${daySweep.level.toFixed(2)}`);
+      if (dayBOS)   events.push(`${dayBOS.type} confirmed at $${dayBOS.level.toFixed(2)}`);
+      if (dayCHoCH) events.push(`${dayCHoCH.type} on 1H at $${dayCHoCH.level.toFixed(2)}`);
+      if (dayOBs.length) events.push(`${dayOBs.length} Order Block${dayOBs.length>1?'s':''} active`);
+    } else if (day.bar) {
+      dOpen = day.bar.open; dHigh = day.bar.high; dLow = day.bar.low; dClose = day.bar.close;
+      note = 'Daily bar — intraday detail not loaded for this day';
+    } else if (dc.length >= 2) {
+      dOpen  = dc[0].open;
+      dClose = dc[dc.length-1].close;
+      dHigh  = Math.max(...dc.map(c=>c.high));
+      dLow   = Math.min(...dc.map(c=>c.low));
+      note = 'Partial intraday data only';
+    } else {
+      return `<div style="border:1px solid var(--border2);border-radius:6px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:var(--text-dim);">${label} — no data loaded</div>`;
+    }
+
+    const dChg    = dClose - dOpen;
+    const dChgPct = (dChg/dOpen*100).toFixed(2);
+    const dRange  = (dHigh-dLow).toFixed(2);
+    const dir     = dChg > 0 ? '▲ BULLISH' : '▼ BEARISH';
+    const dirCol  = dChg > 0 ? 'var(--bull)' : 'var(--bear)';
 
     return `
       <div style="border:1px solid var(--border2);border-radius:6px;padding:12px;margin-bottom:10px;background:rgba(255,255,255,0.02);">
@@ -2187,14 +2213,14 @@ function openWeeklyReport() {
             <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--gold)">${dClose.toFixed(2)}</div>
           </div>
         </div>
-        <div style="font-size:12px;color:var(--text-dim)">Range: ${dRange} pts &nbsp;|&nbsp; ${events.length ? events.join(' &nbsp;·&nbsp; ') : 'No major structural events'}</div>
+        <div style="font-size:12px;color:var(--text-dim)">Range: ${dRange} pts &nbsp;|&nbsp; ${events.length ? events.join(' &nbsp;·&nbsp; ') : (note || 'No major structural events')}</div>
       </div>`;
   }
 
   // ── Trade log ─────────────────────────────────────────────
   function tradeStatusHTML(t) {
     const statusColors = { SL:'var(--bear)', TP1:'var(--bull)', TP2:'var(--bull)', TP3:'var(--bull)', OPEN:'var(--warn)' };
-    const statusLabels = { SL:'❌ SL HIT', TP1:'✅ TP1 ONLY', TP2:'✅✅ TP1+TP2', TP3:'✅✅✅ TP1+TP2+TP3', OPEN:'⏳ OPEN' };
+    const statusLabels = { SL:'❌ SL HIT', TP1:'✅ TP1 → BE', TP2:'✅✅ TP1+TP2 → BE', TP3:'✅✅✅ TP1+TP2+TP3', OPEN:'⏳ OPEN' };
     const col   = statusColors[t.status] || 'var(--text-dim)';
     const label = statusLabels[t.status] || t.status;
     const pnlCol = t.pnl > 0 ? 'var(--bull)' : t.pnl < 0 ? 'var(--bear)' : 'var(--text-dim)';
@@ -2231,7 +2257,13 @@ function openWeeklyReport() {
   const slCount  = completedTrades.filter(t => t.status === 'SL').length;
 
   // ── Key levels next week ──────────────────────────────────
-  const biasNext  = struct.trend;
+  // Next-week bias comes from D1 + 4H (per the strategy checklist); 1H is only the fallback
+  const htfDirs = [d1Struct && d1Struct.trend, h4Struct && h4Struct.trend].filter(t => t && t !== 'RANGING');
+  const htfConflict = htfDirs.length === 2 && htfDirs[0] !== htfDirs[1];
+  let biasNext = struct.trend;
+  if (d1Struct || h4Struct) {
+    biasNext = htfDirs.length === 0 || htfConflict ? 'RANGING' : htfDirs[0];
+  }
   const topResist = pools.filter(p=>p.price>current).sort((a,b)=>a.price-b.price).slice(0,3);
   const botSupport = pools.filter(p=>p.price<current).sort((a,b)=>b.price-a.price).slice(0,3);
   const bearOBs   = obs.filter(o=>o.mid>current&&o.type==='BEARISH').sort((a,b)=>a.mid-b.mid).slice(0,2);
@@ -2275,18 +2307,14 @@ function openWeeklyReport() {
     <!-- SECTION 1: DAY BY DAY -->
     <div class="modal-section">
       <div class="modal-section-title">📅 DAY BY DAY MARKET BREAKDOWN</div>
-      ${narrateDay(getDayCandles(4), 'MONDAY')}
-      ${narrateDay(getDayCandles(3), 'TUESDAY')}
-      ${narrateDay(getDayCandles(2), 'WEDNESDAY')}
-      ${narrateDay(getDayCandles(1), 'THURSDAY')}
-      ${narrateDay(getDayCandles(0), 'FRIDAY (current)')}
+      ${dayData.map(narrateDay).join('')}
     </div>
 
     <!-- SECTION 2: TRADE LOG -->
     <div class="modal-section">
-      <div class="modal-section-title">📋 TRADE LOG — THIS SESSION</div>
+      <div class="modal-section-title">📋 TRADE LOG — LAST 7 DAYS</div>
       ${STATE.tradeLog.length === 0
-        ? '<div class="modal-text" style="color:var(--text-dim)">No trades triggered this session. Trades are recorded in real time as setups fire.</div>'
+        ? '<div class="modal-text" style="color:var(--text-dim)">No trades recorded in the last 7 days. Trades are recorded in real time as setups fire.</div>'
         : STATE.tradeLog.map(t => tradeStatusHTML(t)).join('')
       }
     </div>
@@ -2407,7 +2435,7 @@ function openWeeklyReport() {
              color:${biasNext==='BULLISH'?'var(--bull)':biasNext==='BEARISH'?'var(--bear)':'var(--neutral)'}">
           ${biasNext==='BULLISH'?'▲ BULLISH':biasNext==='BEARISH'?'▼ BEARISH':'◆ NEUTRAL'}
         </div>
-        ${d1Struct ? `<div style="font-size:12px;color:var(--text-dim);margin-top:4px;">D1: ${d1Struct.trend} &nbsp;|&nbsp; 4H: ${h4Struct?h4Struct.trend:'N/A'} &nbsp;|&nbsp; 1H: ${struct.trend}</div>` : ''}
+        ${d1Struct ? `<div style="font-size:12px;color:var(--text-dim);margin-top:4px;">D1: ${d1Struct.trend} &nbsp;|&nbsp; 4H: ${h4Struct?h4Struct.trend:'N/A'} &nbsp;|&nbsp; 1H: ${struct.trend}${htfConflict ? ' &nbsp;·&nbsp; ⚠ D1 and 4H disagree' : ''}</div>` : ''}
       </div>
       <div class="modal-text">
         ${biasNext==='BULLISH'
@@ -2711,86 +2739,86 @@ function registerTrade(trade) {
     slHit:     false,
     status:    'OPEN',
     pnl:       0,
-    candleIndexAtEntry: trade.candleIndex,
+    candleIndexAtEntry: trade.candleIndex,   // legacy; outcomes are matched by time now
+    entryTs:   Date.now(),
+    lastCheckedTs: 0,
+    riskDollars: TRADE.maxRiskDollars,
     tfKey:     trade.tf,
     alertKey:  alertKey,
   });
   saveTradeLog(); // persist immediately
 }
 
+// ── Candle time → UTC milliseconds ───────────────────────────
+// Twelve Data returns "YYYY-MM-DD HH:MM:SS" (no zone) or "YYYY-MM-DD"; treat both as UTC.
+const TF_MS = { '15min': 15 * 60000, '1H': 60 * 60000, '4H': 4 * 60 * 60000, 'D1': 24 * 60 * 60000 };
+
+function candleTs(c) {
+  if (!c || c.time == null) return 0;
+  if (typeof c.time === 'number') return c.time * 1000;
+  let str = String(c.time).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) str += 'T00:00:00Z';
+  else {
+    str = str.replace(' ', 'T');
+    if (!/[zZ]|[+-]\d{2}:?\d{2}$/.test(str)) str += 'Z';
+  }
+  const ts = Date.parse(str);
+  return isNaN(ts) ? 0 : ts;
+}
+
+// ── Trade outcome model ──────────────────────────────────────
+// Position is split in thirds, one third closing at each of TP1/TP2/TP3 (1:2, 1:3, 1:5).
+// After TP1 the stop moves to breakeven (entry). Full stop-out before TP1 = -1R.
+// Only CLOSED candles are evaluated, in time order, and if a candle touches both the
+// stop and a target the stop is assumed to have been hit first (conservative).
+// Trades are matched to candles by TIME (not array index), so the sliding 100-candle
+// window can't break them.
+const TP_R = [2, 3, 5];
+
 function updateTradeOutcomes() {
+  const now = Date.now();
   STATE.tradeLog.forEach(trade => {
     if (trade.status !== 'OPEN') return;
 
     const candles = STATE.candles[trade.tfKey];
-    if (!candles) return;
+    if (!candles || candles.length === 0) return;
 
-    // Only check candles after entry
-    const startIdx = (trade.candleIndexAtEntry || 0) + 1;
+    const tfMs  = TF_MS[trade.tfKey] || TF_MS['1H'];
+    const risk  = trade.riskDollars || TRADE.maxRiskDollars;
     const isBuy = trade.type === 'BUY';
+    const from  = Math.max(trade.entryTs || trade.id || 0, trade.lastCheckedTs || 0);
 
-    for (let i = startIdx; i < candles.length; i++) {
-      const c = candles[i];
+    for (let i = 0; i < candles.length; i++) {
+      const c  = candles[i];
+      const ts = candleTs(c);
+      if (!ts || ts <= from) continue;       // before entry / already checked
+      if (ts + tfMs > now) break;            // candle still forming — evaluate once it closes
 
-      if (isBuy) {
-        // For BUY: high touches TPs, low touches SL
-        // Check TPs in order first (price goes up before down on a winning buy)
-        if (!trade.tp1Hit && c.high >= trade.tp1) {
-          trade.tp1Hit = true;
-          trade.pnl += 20;
-        }
-        if (trade.tp1Hit && !trade.tp2Hit && c.high >= trade.tp2) {
-          trade.tp2Hit = true;
-          trade.pnl += 30;
-        }
-        if (trade.tp2Hit && !trade.tp3Hit && c.high >= trade.tp3) {
-          trade.tp3Hit = true;
-          trade.pnl += 50;
-          trade.status = 'TP3';
-          break;
-        }
-        // SL check — if price wicks to original SL
-        if (c.low <= trade.sl) {
-          trade.slHit = true;
-          if (!trade.tp1Hit) {
-            trade.pnl = -10;
-            trade.status = 'SL';
-          } else if (!trade.tp2Hit) {
-            trade.status = 'TP1';  // SL after TP1 — TP2 and TP3 missed
-          } else {
-            trade.status = 'TP2';  // SL after TP2 — TP3 missed
-          }
-          break;
+      const stop    = trade.tp1Hit ? trade.entry : trade.sl;   // breakeven after TP1
+      const stopped = isBuy ? c.low <= stop : c.high >= stop;
+      const hit     = lvl => isBuy ? c.high >= lvl : c.low <= lvl;
+
+      if (stopped) {
+        trade.slHit = true;
+        if (!trade.tp1Hit) {
+          trade.pnl = -risk;
+          trade.status = 'SL';
+        } else {
+          trade.status = trade.tp2Hit ? 'TP2' : 'TP1';   // banked thirds kept, rest closed at breakeven
         }
       } else {
-        // For SELL: low touches TPs, high touches SL
-        if (!trade.tp1Hit && c.low <= trade.tp1) {
-          trade.tp1Hit = true;
-          trade.pnl += 20;
-        }
-        if (trade.tp1Hit && !trade.tp2Hit && c.low <= trade.tp2) {
-          trade.tp2Hit = true;
-          trade.pnl += 30;
-        }
-        if (trade.tp2Hit && !trade.tp3Hit && c.low <= trade.tp3) {
+        if (!trade.tp1Hit && hit(trade.tp1)) { trade.tp1Hit = true; trade.pnl += risk * TP_R[0] / 3; }
+        if (trade.tp1Hit && !trade.tp2Hit && hit(trade.tp2)) { trade.tp2Hit = true; trade.pnl += risk * TP_R[1] / 3; }
+        if (trade.tp2Hit && !trade.tp3Hit && hit(trade.tp3)) {
           trade.tp3Hit = true;
-          trade.pnl += 50;
+          trade.pnl += risk * TP_R[2] / 3;
           trade.status = 'TP3';
-          break;
-        }
-        if (c.high >= trade.sl) {
-          trade.slHit = true;
-          if (!trade.tp1Hit) {
-            trade.pnl = -10;
-            trade.status = 'SL';
-          } else if (!trade.tp2Hit) {
-            trade.status = 'TP1';
-          } else {
-            trade.status = 'TP2';
-          }
-          break;
         }
       }
+
+      trade.pnl = Math.round(trade.pnl * 100) / 100;
+      trade.lastCheckedTs = ts;
+      if (trade.status !== 'OPEN') break;
     }
   });
 }
